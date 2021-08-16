@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+        Actions
+{% endblock %}
+
+{% block sidebar %}
+<center><h2>Все о криптовалюте и ее стоимости</h2></center><br>&nbsp;
+{% endblock %}
+
+{% block content %}
+    <script src="https://widgets.coingecko.com/coingecko-coin-list-widget.js"></script>
+    <coingecko-coin-list-widget  coin-ids="bitcoin,ethereum,eos,ripple,litecoin" currency="usd" locale="ru"></coingecko-coin-list-widget><br>
+    <a href="https://accounts.binance.com/en/login">Купить</a>
+  </center>
+{% endblock %}

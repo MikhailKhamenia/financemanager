@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Список транзакций
+{% endblock %}
+
+{% block content %}
+<center>
+
+            Транзакции: <br>
+    <table border="1">
+            <tr><th>Описание</th><th>Сумма</th><th>Дата</th></tr>
+            {% for transaction in transactions %}
+                <tr class='success'>
+                    <td>{{ transaction.comment }}</td>
+                    <td>{{ transaction.transaction_sum }}</td>
+                    <td>{{ transaction.date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+</center>
+    {% endblock %}
