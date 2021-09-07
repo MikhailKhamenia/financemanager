@@ -9,8 +9,6 @@
         <form method="post">
             {% csrf_token %}
             {{ add_transaction.as_p }}
-            <p><label for="date">Дата: </label>
-               <input type="date" name="date"></p>
             <input type="submit" value="Добавить" name="add_transaction">
         </form>
     </article>

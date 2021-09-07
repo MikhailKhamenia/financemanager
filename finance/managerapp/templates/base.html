@@ -88,30 +88,34 @@
     </header>
     <nav>
         <ul>
-            <li><a href="{% url 'profile' %}"> Личный кабинет</a>
-                <ul>
-                    <li><a href="{% url 'all_transactions' %}"> Транзакции</a></li>
-                    <li><a href="{% url 'add_transaction' %}">Добавить транзакцию</a></li>
-                    <li><a href="{% url 'logout' %}">Выход</a></li>
-                </ul>
-            </li>
+            {% if user.is_authenticated == False %}
+                    <li><a href="{% url 'login' %}"> Личный кабинет</a></li>
+                {% else %}
+                        <li><a href="{% url 'profile' %}"> Личный кабинет</a></li>
+            {% endif %}
             <li><a href=""> Вложения</a>
                 <ul>
                     <li><a href="{% url 'actions' %}">Акции</a></li>
                     <li><a href="{% url 'crypt' %}">Криптовалюта</a></li>
                 </ul>
             </li>
-            <li><a href=""> Вход/регистрация </a>
+            {% if user.is_authenticated == True %}
+
+                {% else %}
+                    <li><a href=""> Вход/регистрация</a>
+            {% endif %}
                 <ul>
                     <li><a href="{% url 'login' %}">Вход</a></li>
                     <li><a href="{%url 'signup' %}">Регистрация</a></li>
                 </ul>
+
             </li>
+
             <li><a href=""> About</a></li>
         </ul>
 
     </nav>
-
+</center>
     {% block sidebar %}
     {% endblock %}
     <section>
@@ -121,6 +125,6 @@
     </section>
     <footer>
     </footer>
-    </center>
+
 </body>
 </html>

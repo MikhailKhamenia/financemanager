@@ -20,12 +20,24 @@
     {% if error %}
         <div style="color:red;">{{ error }}</div>
     {% endif %}
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Логин">
-        <input type="password" name="password" placeholder="Пароль">
-        <input type="submit" value="Войти">
-    </form>
+         <div class="login-box">
+            <h2>Вход</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="user-box">
+                    <label>Имя пользователя</label>
+                    <input class="user" type="text" name="username">
+
+                </div>
+                <div class="user-box">
+                    <label>Пароль</label>
+                    <input class="user" type="password" name="password">
+
+                </div>
+                <input class="ok" type="submit" value="Войти">
+
+            </form>
+        </div>
 
 </body>
 </html>

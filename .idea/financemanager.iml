@@ -3,8 +3,9 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/VE" />
+      <excludeFolder url="file://$MODULE_DIR$/v" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.9 (VE)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (financemanager) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

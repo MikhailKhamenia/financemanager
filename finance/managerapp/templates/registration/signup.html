@@ -1,17 +1,10 @@
-{% extends "base.html" %}
- 
-{% block content %}
-<body>
-    <h1>Регистрация</h1>
-    <form method="post">
-        {% csrf_token %}
-        Имя пользователя: <input type="text" name="username"><br>
-        Email: <input type="email" name="email"><br>
-        Пароль: <input type="password" name="password"><br>
-        Пароль еще раз: <input type="password" name="password2"><br>
+{% extends 'base.html' %}
 
-        <input type="submit" value="Регистрация">
-    </form>
-</body>
-</html>
+{% block content %}
+<h2>Sign up</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Sign up</button>
+</form>
 {% endblock content %}

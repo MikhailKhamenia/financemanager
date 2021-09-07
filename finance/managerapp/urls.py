@@ -9,7 +9,7 @@ from .views import transaction_form, all_transactions
 
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
-    path('login/', LoginView.as_view(), name="login"),
+    path('login/', LoginView.as_view(redirect_authenticated_user=True), name="login"),
     path('profile/', ProfilePage.as_view(), name="profile"),
     path('actions/', ActionPage.as_view(), name="actions"),
     path('crypt/', CryptPage.as_view(), name="crypt"),

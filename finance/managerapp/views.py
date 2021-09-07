@@ -1,18 +1,29 @@
 from django.urls import reverse
-from django.views.generic import TemplateView,ListView
+from django.views.generic import TemplateView
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
 from django.shortcuts import redirect, render, HttpResponseRedirect
-from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .forms import TransactionForm
-from .models import Transactions
+from .models import Transactions, TransactionsPermissions
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 
-
+def login_excluded(redirect_to):
+    """ This decorator kicks authenticated users out of a view """
+    def _method_wrapper(view_method):
+        def _arguments_wrapper(request, *args, **kwargs):
+            if request.user.is_authenticated:
+                return redirect(redirect_to)
+            return view_method(request, *args, **kwargs)
+        return _arguments_wrapper
+    return _method_wrapper
 
 
 class LoginView(TemplateView):
     template_name = "registration/login.html"
 
+    redirect_authenticated_user = True
     def dispatch(self, request, *args, **kwargs):
         context = {}
         if request.method == 'POST':
@@ -29,23 +40,13 @@ class LoginView(TemplateView):
 class ProfilePage(TemplateView):
     template_name = "registration/profile.html"
 
-class  SignUpView(TemplateView):
-    template_name = "registration/signup.html"
+class SignUpView(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'registration/signup.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            email = request.POST.get('email')
-            password = request.POST.get('password')
-            password2 = request.POST.get('password2')
 
-            if password == password2:
-                User.objects.create_user(username, email, password)
-                return redirect(reverse("signup"))
-
-        return render(request, self.template_name)
-
-class  ActionPage(TemplateView):
+class ActionPage(TemplateView):
     template_name = "actions.html"
 
 class  CryptPage(TemplateView):
@@ -59,24 +60,39 @@ class LogoutView(TemplateView):
         # После чего, перенаправляем пользователя на главную страницу.
         return HttpResponseRedirect("/")
 
-"""Главная страница со ссылками. суммами по каждому Source_types
-   и целиком"""
 
 
+@login_required
 def transaction_form(request):
     if request.method == 'POST':
         add_transaction = TransactionForm(request.POST)
+        add_transaction.user = request.user
+        add_transaction.save()
+        TransactionsPermissions.objects.create(user=request.user, whom=request.user)
         if add_transaction.is_valid():
             add_transaction.save()
+            lst= Transactions.objects.last()
+            lst.user = request.user
+            lst.save()
+
             return redirect(reverse("profile"))
     else:
         add_transaction = TransactionForm()
+
     return render(request, "add_transaction.html", {'add_transaction': add_transaction})
 
+@login_required
 def all_transactions(request):
-    transactions=Transactions.objects.all()
-    return render(request, 'transactions.html', {'transactions':transactions})
-
+    search_input = request.GET.get('search_area')
+    if search_input:
+        transactions = Transactions.objects.filter(full_name__icontains=search_input)
+    else:
+        search_input = ''
+        cp = TransactionsPermissions.objects.filter(user=request.user)
+        transactions = Transactions.objects.none()
+        for c in cp:
+            transactions |= Transactions.objects.filter(user=c.whom)
+    return render(request, 'transactions.html', {'transactions':transactions, 'search_input': search_input})
 
 
 
